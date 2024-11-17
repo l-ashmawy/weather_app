@@ -1,0 +1,36 @@
+name: splash
+description: A new Flutter project.
+version: 0.0.1
+publish_to: "none"
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  dependencies:
+    path: ../dependencies
+  art_core:
+    path: ../art_core
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+
+dependency_overrides:
+  intl: 0.18.1
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+
