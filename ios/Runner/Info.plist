@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>The Weather App requires access to the device location to get weather data for your current location.</string>
+    <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+    <dict>
+    	<key>TemporaryPreciseAccuracy</key>
+    	<string>The Weather App requires access to the device location to get weather data for your current location.</string>
+    </dict>
 </dict>
 </plist>

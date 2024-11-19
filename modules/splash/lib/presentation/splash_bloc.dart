@@ -13,7 +13,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     });
     on<OnAnimationEnded>(
       (event, emit) async {
-        // Modular.to.navigate(NavigatorKeys.AUTH_KEY + NavigatorKeys.ENTER_EMAIL);
+        Modular.to.navigate(NavigatorKeys.FEATURES_KEY + NavigatorKeys.WEATHER_PAGE);
       },
       transformer: debounce(const Duration(milliseconds: 500)),
     );
