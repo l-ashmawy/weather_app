@@ -3,4 +3,5 @@
 class NavigatorKeys {
   static const String SPLASH_KEY = "/";
   static const String FEATURES_KEY = "/features";
+  static const String WEATHER_PAGE = "/weather_page";
 }

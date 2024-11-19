@@ -1,6 +1,4 @@
 import 'package:art_core/art_core.dart';
-import 'package:dependencies/dependencies.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class AppTextField extends StatefulWidget {

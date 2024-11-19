@@ -2,6 +2,7 @@ import 'package:core/cache/preference_manager.dart';
 import 'package:core/core.dart';
 import 'package:core/networking/dio_client.dart';
 import 'package:dependencies/dependencies.dart';
+import 'package:features/features_module.dart';
 import 'package:splash/splash_module.dart';
 
 class AppModule extends Module {
@@ -18,5 +19,6 @@ class AppModule extends Module {
   @override
   void routes(RouteManager r) {
     r.module(NavigatorKeys.SPLASH_KEY, module: SplashModule());
+    r.module(NavigatorKeys.FEATURES_KEY, module: FeaturesModule());
   }
 }
