@@ -37,6 +37,8 @@ dependencies:
     path: ./modules/core
   art_core:
     path: ./modules/art_core
+  splash:
+    path: ./modules/splash
 
 
 dev_dependencies:

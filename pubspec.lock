@@ -602,6 +602,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  splash:
+    dependency: "direct main"
+    description:
+      path: "modules/splash"
+      relative: true
+    source: path
+    version: "0.0.1"
   sprintf:
     dependency: transitive
     description:

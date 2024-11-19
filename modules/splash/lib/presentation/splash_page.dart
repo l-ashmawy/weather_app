@@ -12,10 +12,14 @@ class SplashPage extends StatelessWidget {
         body: BlocBuilder<SplashBloc, SplashState>(
       bloc: Modular.get<SplashBloc>(),
       builder: (context, state) {
-        return const AnimatedComponent(
-          path :AssetsManager.splashIcon,
-          width: 180,
-          height: 180,
+        return  Container(
+          color: AppColors.primaryColor,
+          alignment: Alignment.center,
+          child: AnimatedComponent(
+            path :AssetsManager.splashIcon,
+            width: context.screenWidth,
+            height: context.screenHeight * 0.5,
+          ),
         );
       },
     ));
