@@ -23,7 +23,7 @@ void main() {
   late MockRemoteWeatherDataSourceImpl remoteDataSource;
   late WeatherRepositoryImpl repository;
   late MockLocalWeatherDataSourceImpl localDataSource;
-  late CheckNetworkService checkNetworkService;
+  late MockCheckNetworkService checkNetworkService;
 
   setUp(() {
     remoteDataSource = MockRemoteWeatherDataSourceImpl();
@@ -44,8 +44,8 @@ void main() {
     ],
     main: MainDataModel(
         temp: 20.15,
-        tempMin: 24.15,
-        tempMax: 16.15,
+        tempMin: 16.15,
+        tempMax: 24.15,
         pressure: 1013,
         humidity: 82,
         grndLevel: 20,
@@ -77,7 +77,7 @@ void main() {
         id: 1,
         main: 'Clear',
         description: 'clear sky',
-        icon: '01d',
+        icon: 'https://openweathermap.org/img/wn/01d@2x.png',
       ),
     ],
     main: MainDataEntity(
@@ -113,17 +113,13 @@ void main() {
     const cityName = 'Mansoura';
 
     test('should fetch weather from local data source when offline', () async {
-      // Arrange
       when(checkNetworkService.checkNetworkService())
           .thenAnswer((_) async => false);
-      when(localDataSource.fetchWeather(cityName: cityName)).thenAnswer(
-        (_) async => Right(mockWeatherResponse),
-      );
+      when(localDataSource.fetchWeather(cityName: cityName))
+          .thenAnswer((_) async => Right(mockWeatherResponse));
 
-      // Act
       final result = await repository.fetchWeather(cityName: cityName);
 
-      // Assert
       expect(result, Right(mockWeatherEntity));
       verify(checkNetworkService.checkNetworkService()).called(1);
       verify(localDataSource.fetchWeather(cityName: cityName)).called(1);
@@ -131,54 +127,47 @@ void main() {
     });
 
     test('should fetch weather from remote and save to local when online',
-        () async {
-      // Arrange
-      final mockResponse = NetworkResponse(
-        mockWeatherResponse,
-        true,
-        '',
-      );
+            () async {
+          final mockResponse = NetworkResponse(
+            mockWeatherResponse,
+            true,
+            '',
+          );
 
-      when(checkNetworkService.checkNetworkService())
-          .thenAnswer((_) async => true);
-      when(remoteDataSource.fetchWeather(cityName: cityName))
-          .thenAnswer((_) async => mockResponse);
-      when(localDataSource.fetchWeather(cityName: cityName)).thenAnswer(
-        (_) async => Right(mockWeatherResponse),
-      );
-      when(localDataSource.saveWeather(
-        cityName: cityName,
-        weatherResponse: mockWeatherResponse,
-      )).thenAnswer((_) async {});
+          when(checkNetworkService.checkNetworkService())
+              .thenAnswer((_) async => true);
+          when(remoteDataSource.fetchWeather(cityName: cityName))
+              .thenAnswer((_) async => mockResponse);
+          when(localDataSource.fetchWeather(cityName: cityName))
+              .thenAnswer((_) async => Right(mockWeatherResponse));
+          when(localDataSource.saveWeather(
+            cityName: cityName,
+            weatherResponse: mockWeatherResponse,
+          )).thenAnswer((_) async {});
 
-      // Act
-      final result = await repository.fetchWeather(cityName: cityName);
+          final result = await repository.fetchWeather(cityName: cityName);
 
-      // Assert
-      expect(result, Right(mockWeatherEntity));
-      verify(checkNetworkService.checkNetworkService()).called(1);
-      verify(remoteDataSource.fetchWeather(cityName: cityName)).called(1);
-      verify(localDataSource.saveWeather(
-        cityName: cityName,
-        weatherResponse: mockWeatherResponse,
-      )).called(1);
-    });
+          expect(result, Right(mockWeatherEntity));
+          verify(checkNetworkService.checkNetworkService()).called(1);
+          verify(remoteDataSource.fetchWeather(cityName: cityName)).called(1);
+          verify(localDataSource.saveWeather(
+            cityName: cityName,
+            weatherResponse: mockWeatherResponse,
+          )).called(1);
+        });
 
     test('should return Failure when remote fetch fails', () async {
-      // Arrange
       final mockErrorResponse =
-          NetworkResponse(mockWeatherResponse, false, "server error");
+      NetworkResponse(mockWeatherResponse, false, "server error");
 
       when(checkNetworkService.checkNetworkService())
           .thenAnswer((_) async => true);
       when(remoteDataSource.fetchWeather(cityName: cityName))
           .thenAnswer((_) async => mockErrorResponse);
 
-      // Act
       final result = await repository.fetchWeather(cityName: cityName);
 
-      // Assert
-      expect(result, const Left(Failure('Server Error')));
+      expect(result, const Left(Failure('server error')));
       verify(checkNetworkService.checkNetworkService()).called(1);
       verify(remoteDataSource.fetchWeather(cityName: cityName)).called(1);
       verifyNoMoreInteractions(localDataSource);
