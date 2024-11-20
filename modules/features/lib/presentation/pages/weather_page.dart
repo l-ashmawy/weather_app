@@ -39,8 +39,7 @@ class WeatherPage extends StatelessWidget {
               ),
               onChanged: (value) {
                 if (value.length >= 3) {
-                  weatherBloc
-                      .add(FetchWeatherWithCityNameEvent(cityName: value));
+                  weatherBloc.add(FetchWeatherWithCityNameEvent(cityName: value));
                 }
               },
             ).marginSymmetric(vertical: 16),
@@ -51,10 +50,11 @@ class WeatherPage extends StatelessWidget {
                   return const Center(child: AnimatedAppLoader());
                 } else if (state is WeatherErrorState) {
                   return Center(
-                      child: AppText(
-                    text: state.errorMessage,
-                    maxLines: 10,
-                  ));
+                    child: AppText(
+                      text: state.errorMessage,
+                      maxLines: 10,
+                    ),
+                  );
                 } else if (state is WeatherSuccessState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,13 +70,11 @@ class WeatherPage extends StatelessWidget {
                         fontSize: 18,
                       ),
                       AppText(
-                        text:
-                            "H: ${state.weather.main!.tempMax.toString()} L: ${state.weather.main!.tempMin.toString()}",
+                        text: "H: ${state.weather.main!.tempMax.toString()} L: ${state.weather.main!.tempMin.toString()}",
                         fontSize: 14,
                       ),
                       AppText(
-                        text:
-                            "Wind Speed: ${state.weather.wind!.speed.toString()}",
+                        text: "Wind Speed: ${state.weather.wind!.speed.toString()}",
                         fontSize: 14,
                       ),
                     ],
