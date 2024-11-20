@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:core/networking/failure.dart';
 import 'package:features/data/data_source/local/local_weather_data_source.dart';
 
 import 'package:features/domain/repository/weather_repository.dart';

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:art_core/art_core.dart';
 import 'package:dependencies/dependencies.dart';
