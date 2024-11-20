@@ -1,6 +1,5 @@
 class MainDataModel {
   double? temp;
-  double? feelsLike;
   double? tempMin;
   double? tempMax;
   int? pressure;
@@ -10,7 +9,6 @@ class MainDataModel {
 
   MainDataModel(
       {this.temp,
-        this.feelsLike,
         this.tempMin,
         this.tempMax,
         this.pressure,
@@ -20,7 +18,6 @@ class MainDataModel {
 
   MainDataModel.fromJson(Map<String, dynamic> json) {
     temp = json['temp'];
-    feelsLike = json['feels_like'];
     tempMin = json['temp_min'];
     tempMax = json['temp_max'];
     pressure = json['pressure'];
@@ -32,7 +29,6 @@ class MainDataModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data =  <String, dynamic>{};
     data['temp'] = temp;
-    data['feels_like'] = feelsLike;
     data['temp_min'] = tempMin;
     data['temp_max'] = tempMax;
     data['pressure'] = pressure;

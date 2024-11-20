@@ -17,7 +17,6 @@ class WeatherResponse extends BaseMappable {
   int? timezone;
   int? id;
   String? name;
-  int? cod;
 
   WeatherResponse(
       {this.weather,
@@ -30,10 +29,10 @@ class WeatherResponse extends BaseMappable {
       this.timezone,
       this.id,
       this.name,
-      this.cod});
+      });
 
   @override
-  Mappable fromJson(Map<String, dynamic> json) {
+  WeatherResponse fromJson(Map<String, dynamic> json) {
     if (json['weather'] != null) {
       weather = <WeatherDataModel>[];
       json['weather'].forEach((v) {
@@ -49,7 +48,6 @@ class WeatherResponse extends BaseMappable {
     timezone = json['timezone'];
     id = json['id'];
     name = json['name'];
-    cod = json['cod'];
 
     return WeatherResponse(
       weather: weather,
@@ -62,7 +60,6 @@ class WeatherResponse extends BaseMappable {
       timezone: timezone,
       id: id,
       name: name,
-      cod: cod,
     );
   }
 
@@ -88,7 +85,6 @@ class WeatherResponse extends BaseMappable {
     data['timezone'] = timezone;
     data['id'] = id;
     data['name'] = name;
-    data['cod'] = cod;
     return data;
   }
 }

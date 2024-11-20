@@ -5,10 +5,9 @@ import '../models/main_data_model.dart';
 extension MainDataMapper on MainDataModel {
   MainDataEntity toDomainEntity() {
     return MainDataEntity(
-      temp: temp,
-      feelsLike: feelsLike,
-      tempMin: tempMin,
-      tempMax: tempMax,
+      temp: "$temp \u00B0C",
+      tempMin: "$tempMin \u00B0C",
+      tempMax: "$tempMax \u00B0C",
       pressure: pressure,
       seaLevel: seaLevel,
       grndLevel: grndLevel,

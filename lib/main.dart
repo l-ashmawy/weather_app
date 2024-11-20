@@ -10,6 +10,8 @@ import 'app_widget.dart';
 Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('weather');
 
   runApp(
     ModularApp(

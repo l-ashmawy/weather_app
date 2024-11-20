@@ -19,7 +19,6 @@ extension WeatherMapper on WeatherResponse {
       timezone: timezone,
       id: id,
       name: name,
-      cod: cod,
     );
   }
 }

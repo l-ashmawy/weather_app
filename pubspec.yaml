@@ -66,6 +66,8 @@ flutter:
 
   assets:
     - assets/lottie_json/
+    - .env
+
 
   # fonts:
   #   - family: Schyler

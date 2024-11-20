@@ -1,10 +1,10 @@
 import 'package:dependencies/dependencies.dart';
 
 class MainDataEntity extends Equatable {
-  final double? temp;
+  final String? temp;
   final double? feelsLike;
-  final double? tempMin;
-  final double? tempMax;
+  final String? tempMin;
+  final String? tempMax;
   final int? pressure;
   final int? humidity;
   final int? seaLevel;
