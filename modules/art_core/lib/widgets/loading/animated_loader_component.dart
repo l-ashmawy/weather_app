@@ -9,8 +9,8 @@ class AnimatedAppLoader extends StatelessWidget {
 
   const AnimatedAppLoader({
     super.key,
-    required this.height,
-    required this.width,
+     this.height =180,
+    this.width=180,
   });
 
   @override
