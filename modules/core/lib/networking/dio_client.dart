@@ -1,11 +1,10 @@
-import 'package:core/cache/preference_manager.dart';
 import 'package:core/networking/networking.dart';
 import 'package:dependencies/dependencies.dart';
 
 class DioClient {
+  final ApiConfigurations configurations ;
 
-  DioClient();
-  final ApiConfigurations configurations = ApiConfigurations();
+  DioClient(this.configurations);
 
   Dio get dio => _getDio();
 

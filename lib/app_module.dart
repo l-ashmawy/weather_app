@@ -1,24 +1,27 @@
-import 'package:core/cache/preference_manager.dart';
 import 'package:core/core.dart';
-import 'package:core/networking/dio_client.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:features/features_module.dart';
 import 'package:splash/splash_module.dart';
 
 class AppModule extends Module {
   @override
-  void binds(i) {
-    i.addSingleton(PreferenceManager.new);
-    i.addLazySingleton<DioClient>((i) => DioClient());
-    i.addLazySingleton<Dio>((i) => i<DioClient>().dio);
-  }
+  final List<Bind> binds = [
+    Bind.lazySingleton<DioClient>((i) => DioClient(ApiConfigurations())),
+    Bind.lazySingleton<Dio>((i) => i<DioClient>().dio),
+    Bind.lazySingleton<NetworkHandler>((i) => NetworkHandler(i())),
+    Bind.lazySingleton<CacheManager>((i) => CacheManagerImpl()),
+    Bind.lazySingleton<CheckNetworkService>((i) => CheckNetworkService()),
+  ];
 
   @override
-  List<Module> get imports => [];
+  List<ModularRoute> get routes => [
+        ModuleRoute(NavigatorKeys.SPLASH_KEY, module: SplashModule()),
+        ModuleRoute(NavigatorKeys.FEATURES_KEY, module: FeaturesModule()),
+      ];
 
   @override
-  void routes(RouteManager r) {
-    r.module(NavigatorKeys.SPLASH_KEY, module: SplashModule());
-    r.module(NavigatorKeys.FEATURES_KEY, module: FeaturesModule());
-  }
+  List<Module> get imports => [
+        SplashModule(),
+        FeaturesModule(),
+      ];
 }
