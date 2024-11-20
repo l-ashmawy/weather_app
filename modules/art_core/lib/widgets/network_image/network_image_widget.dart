@@ -74,8 +74,8 @@ class MyNetworkImageWidget extends StatelessWidget {
       imageUrl: url,
       httpHeaders: headers,
       imageBuilder: (context, imageProvider) => Container(
-        width: width ?? 70.0,
-        height: height ?? 70.0,
+        width: width ?? 100.0,
+        height: height ?? 100.0,
         decoration: BoxDecoration(
             shape: isCircle! ? BoxShape.circle : BoxShape.rectangle,
             borderRadius: isCircle! ? null : BorderRadius.circular(radius!),

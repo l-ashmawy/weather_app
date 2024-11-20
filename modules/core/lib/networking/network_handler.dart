@@ -3,29 +3,14 @@ import 'dart:developer';
 import 'package:core/core.dart';
 import 'package:dependencies/dependencies.dart';
 
-export 'package:flutter_modular/flutter_modular.dart';
-
 class NetworkHandler {
   final Dio dio;
 
   NetworkHandler(this.dio);
 
-  final preferenceManager = Modular.get<PreferenceManager>();
-
-  Future<NetworkResponse<ResponseType>> get<ResponseType extends Mappable>(ResponseType responseType, String url,
-      {var body, Map<String, String>? headers, bool isDoorBird = false, bool canLogOut = true}) async {
+  Future<NetworkResponse<ResponseType>> get<ResponseType extends Mappable>(ResponseType responseType, String url, {var body}) async {
     var response;
     try {
-      if (isDoorBird) {
-        dio.options.baseUrl = "https://api.doorbird.io/";
-        dio.options.headers = headers;
-      } else {
-        dio.options.headers = {
-          // "Authorization": preferenceManager.authToken(),
-          // "lang": preferenceManager.currentLang(),
-        };
-        dio.options.baseUrl = ApiConfigurations().baseUrlProd;
-      }
       response = await dio.get(url, queryParameters: body);
       print("***************GET $url , query: $body ***************");
     } on DioError catch (e) {
@@ -33,58 +18,50 @@ class NetworkHandler {
         response = e.response;
       }
     }
-    return handleResponse<ResponseType>(response, responseType, canLogOut, isDoorBird: isDoorBird);
+    return handleResponse<ResponseType>(response, responseType);
   }
 
-  Future<NetworkResponse<ResponseType>> post<ResponseType extends Mappable>(ResponseType responseType, String url,
-      {var body, encoding, Map<String, String>? headers, bool isDoorBird = false, bool canLogOut = true}) async {
+  Future<NetworkResponse<ResponseType>> post<ResponseType extends Mappable>(ResponseType responseType, String url, {var body, encoding}) async {
     var response;
     print("*************** POST $url , body: $body ***************");
+
     try {
-      if (isDoorBird) {
-        dio.options.baseUrl = "https://api.doorbird.io/";
-        dio.options.headers = headers;
-      } else {
-        if (headers != null) {
-          Map<String, dynamic> _headers = {
-            // "Authorization": preferenceManager.authToken(),
-            // "lang": preferenceManager.currentLang(),
-          };
-          _headers.addAll(headers);
-          dio.options.headers = _headers;
-        } else {
-          dio.options.headers = {
-            // "Authorization": preferenceManager.authToken(),
-            // "lang": preferenceManager.currentLang(),
-          };
-        }
-        print("Headers ${dio.options.headers}");
-        dio.options.baseUrl = ApiConfigurations().baseUrlProd;
-      }
+      dio.options.headers = {'Content-Type': 'application/json'};
+
       response = await dio.post(url, data: body, options: Options(requestEncoder: encoding));
     } on DioError catch (e) {
-      print("MESSAGE ERROR ${e.message}");
-      print("MESSAGE ERROR ${e.error}");
+      //  print(e.toString());
       if (e.response != null) {
         response = e.response;
       }
     }
-    return handleResponse<ResponseType>(response, responseType, canLogOut, isDoorBird: isDoorBird);
+    return handleResponse<ResponseType>(response, responseType);
+  }
+
+  Future<NetworkResponse<ResponseType>> postAuth<ResponseType extends Mappable>(ResponseType responseType, String url, {var body, encoding}) async {
+    var response;
+    print("***************POST $url , body: $body ***************");
+
+    try {
+      dio.options.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+      response = await dio.post(url, data: body, options: Options(requestEncoder: encoding));
+    } on DioError catch (e) {
+      //  print(e.toString());
+      if (e.response != null) {
+        response = e.response;
+      }
+    }
+    return handleResponse<ResponseType>(response, responseType);
   }
 
   Future<NetworkResponse<ResponseType>> put<ResponseType extends Mappable>(ResponseType responseType, String url,
-      {var body, encoding, Map<String, String>? headers, bool canLogOut = true}) async {
+      {var body, encoding, Map<String, String>? headers}) async {
     var response;
     print("*************** PUT $url , body: $body ***************  ");
 
     try {
       if (headers != null) {
         dio.options.headers = headers;
-      } else {
-        dio.options.headers = {
-          // "Authorization": preferenceManager.authToken(),
-          // "lang": preferenceManager.currentLang(),
-        };
       }
       response = await dio.put(url, data: body, options: Options(requestEncoder: encoding));
     } on DioError catch (e) {
@@ -93,76 +70,49 @@ class NetworkHandler {
         response = e.response;
       }
     }
-    return handleResponse<ResponseType>(response, responseType, canLogOut);
+    return handleResponse<ResponseType>(response, responseType);
   }
 
-  Future<NetworkResponse<ResponseType>> delete<ResponseType extends Mappable>(ResponseType responseType, String url,
-      {var body, encoding, bool canLogOut = true}) async {
+  Future<NetworkResponse<ResponseType>> delete<ResponseType extends Mappable>(ResponseType responseType, String url, {var body, encoding}) async {
     var response;
     print("*************** Delete $url , body: $body ***************  ");
 
     try {
-      dio.options.headers = {
-        // "Authorization": preferenceManager.authToken(),
-        // "lang": preferenceManager.currentLang(),
-      };
       response = await dio.delete(url, data: body, options: Options(requestEncoder: encoding));
     } on DioError catch (e) {
       if (e.response != null) {
         response = e.response;
       }
     }
-    return handleResponse<ResponseType>(response, responseType, canLogOut);
+    return handleResponse<ResponseType>(response, responseType);
   }
 
-  NetworkResponse<ResponseType> handleResponse<ResponseType extends Mappable>(
-      Response response, ResponseType responseType, bool canLogOut,
-      {bool isDoorBird = false}) {
-    log(response.data.toString());
+  NetworkResponse<ResponseType> handleResponse<ResponseType extends Mappable>(Response response, ResponseType responseType) {
+    print(response);
     try {
       final int statusCode = response.statusCode!;
-      print("Status_Code_is ::  $statusCode");
       if (statusCode != 200) {
-        // log("RESPONSE   ${response.data}");
+        log("RESPONSE   ${response.data}");
       }
       if (statusCode >= 200 && statusCode < 300) {
-        // print("correrct request: " + response.toString());
         if (responseType is ListMappable) {
-          return NetworkResponse<ResponseType>(Mappable(responseType, response.data) as ResponseType, true, "",
-              statusCode: statusCode);
+          return NetworkResponse<ResponseType>(Mappable(responseType, response.data) as ResponseType, true, "");
         } else {
-          return NetworkResponse<ResponseType>(Mappable(responseType, response) as ResponseType, true, "",
-              statusCode: statusCode);
+          return NetworkResponse<ResponseType>(Mappable(responseType, response) as ResponseType, true, "");
         }
-      } else if (statusCode == 401 && !isDoorBird) {
-        // if (canLogOut) {
-        //   Modular.get<LogOutBloc>().add(LogOut());
-        //   Modular.to.navigate("${NavigatorKeys.AUTH_KEY}/");
-        // }
-        return NetworkResponse<ResponseType>(
-            Mappable(responseType, response) as ResponseType, false, response.data['message'],
-            statusCode: statusCode);
+      } else if (statusCode == 401) {
+        return NetworkResponse<ResponseType>(Mappable(responseType, response) as ResponseType, false, response.data['message']);
       } else if (statusCode == 404) {
-        return NetworkResponse<ResponseType>(
-            Mappable(responseType, response) as ResponseType, false, response.data['message'],
-            statusCode: statusCode);
+        print("STATUS CODE IS 404");
+        return NetworkResponse<ResponseType>(Mappable(responseType, response) as ResponseType, false, response.data['message']);
       } else {
-        print("request error: " + response.toString());
         return NetworkResponse<ResponseType>(
-            Mappable(responseType, response) as ResponseType, false, response.data['message'],
-            // response.data['detail'] ?? response.data['error_description'] ?? response.data['message'],
-            statusCode: statusCode);
+            Mappable(responseType, response) as ResponseType,
+            false,
+            response.data['message'] ??"unexpected error");
       }
-    } on DioError catch (e) {
-      // print(e.toString());
-      // if (e.response != null) {
-      //   response = e.response;
-      // }
-      return NetworkResponse<ResponseType>(
-          Mappable(responseType, response) as ResponseType, false, e.message ?? "something_went_wrong");
-    } catch (e) {
-      return NetworkResponse<ResponseType>(
-          Mappable(responseType, response) as ResponseType, false, "something_went_wrong");
+    }catch (e) {
+      return NetworkResponse<ResponseType>(Mappable(responseType, response) as ResponseType, false, e.toString());
     }
   }
 }
