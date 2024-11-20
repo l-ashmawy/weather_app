@@ -24,7 +24,6 @@ class AppTextField extends StatefulWidget {
   final bool isPassword;
   final TextInputType? textInputType;
   final Widget? suffixIcon;
-  final Widget? prefixIcon;
   final TextEditingController? controller;
   final FontWeight? fontWeight;
   final double? textSize;
@@ -63,7 +62,6 @@ class AppTextField extends StatefulWidget {
     this.textInputType,
     this.hintColor,
     this.suffixIcon,
-    this.prefixIcon,
     this.darkOrAuth = false,
     this.isPassword = false,
     this.validator,
@@ -210,7 +208,7 @@ class _AppTextFieldState extends State<AppTextField> {
             ? null
             : widget.errorText,
         errorMaxLines: 3,
-        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon,
 
       ),
       textInputAction: widget.textInputAction,

@@ -10,7 +10,6 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'package:flutter_modular/flutter_modular.dart';
 export 'package:meta/meta.dart';
-// export 'package:dartz/dartz.dart' hide State;
 
 export 'package:rxdart/rxdart.dart';
 export 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';

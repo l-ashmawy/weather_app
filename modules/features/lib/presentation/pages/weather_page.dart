@@ -2,24 +2,14 @@ import 'package:art_core/art_core.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:features/presentation/blocs/weather_bloc.dart';
 
-class WeatherPage extends StatefulWidget {
+class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
 
   @override
-  State<WeatherPage> createState() => _WeatherPageState();
-}
-
-class _WeatherPageState extends State<WeatherPage> {
-  final weatherBloc = Modular.get<WeatherBloc>();
-
-  @override
-  void initState() {
-    weatherBloc.add(FetchWeatherFromCurrentLocationEvent());
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final weatherBloc = Modular.get<WeatherBloc>();
+    TextEditingController controller = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(backgroundColor: const Color(0xFF95D6EA)),
       body: Container(
@@ -40,8 +30,13 @@ class _WeatherPageState extends State<WeatherPage> {
         child: ListView(
           children: [
             AppTextField(
+              controller: controller,
               fillColor: Colors.white,
               hint: "Search By City Name",
+              suffixIcon: InkWell(
+                onTap: () => controller.clear(),
+                child: const Icon(Icons.close),
+              ),
               onChanged: (value) {
                 if (value.length >= 3) {
                   weatherBloc
@@ -50,7 +45,7 @@ class _WeatherPageState extends State<WeatherPage> {
               },
             ).marginSymmetric(vertical: 16),
             BlocBuilder<WeatherBloc, WeatherState>(
-              bloc: weatherBloc,
+              bloc: weatherBloc..add(FetchWeatherFromCurrentLocationEvent()),
               builder: (context, state) {
                 if (state is WeatherLoadingState) {
                   return const Center(child: AnimatedAppLoader());

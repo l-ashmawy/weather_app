@@ -15,8 +15,9 @@ class WeatherLoadingState extends WeatherState {
 
 class WeatherSuccessState extends WeatherState {
   final WeatherEntity weather;
+  final String cityName ;
 
-  WeatherSuccessState({required this.weather});
+  WeatherSuccessState({required this.weather, required this.cityName});
 
   @override
   List<Object?> get props => [weather];

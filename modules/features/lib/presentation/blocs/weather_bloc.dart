@@ -20,9 +20,17 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     this.checkLocationPermissionUseCase,
     this.getCurrentLocationCityNameUseCase,
   ) : super(WeatherInitial()) {
-    on<FetchWeatherWithCityNameEvent>(_fetchWeatherWithCityNameEvent);
+    on<FetchWeatherWithCityNameEvent>(_fetchWeatherWithCityNameEvent,
+        transformer: debounceTransformer(
+          const Duration(milliseconds: 800),
+        ));
     on<FetchWeatherFromCurrentLocationEvent>(
         _fetchWeatherFromCurrentLocationEvent);
+  }
+
+  // Debounce transformer
+  EventTransformer<E> debounceTransformer<E>(Duration duration) {
+    return (events, mapper) => events.debounceTime(duration).flatMap(mapper);
   }
 
   void _fetchWeatherFromCurrentLocationEvent(
@@ -44,7 +52,10 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     final result = await fetchWeatherUseCase.execute(cityName: event.cityName);
     result.fold(
       (failure) => emit(WeatherErrorState(errorMessage: failure.message)),
-      (weather) => emit(WeatherSuccessState(weather: weather)),
+      (weather) => emit(WeatherSuccessState(
+        weather: weather,
+        cityName: event.cityName,
+      )),
     );
   }
 }
