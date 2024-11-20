@@ -1,3 +1,4 @@
+import 'package:core/networking/check_network_service.dart';
 import 'package:features/data/data_source/local/local_weather_data_source_impl.dart';
 import 'package:features/data/data_source/remote/remote_weather_data_source_impl.dart';
 import 'package:features/data/repository/weather_repository_impl.dart';
@@ -14,5 +15,6 @@ import 'package:mockito/annotations.dart';
   FetchWeatherUseCase,
   CheckLocationPermissionUseCase,
   GetCurrentLocationCityNameUseCase,
+  CheckNetworkService,
 ], customMocks: [])
 void main() {}

@@ -289,3 +289,22 @@ class MockGetCurrentLocationCityNameUseCase extends _i1.Mock
         )),
       ) as _i6.Future<String>);
 }
+
+/// A class which mocks [CheckNetworkService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCheckNetworkService extends _i1.Mock
+    implements _i2.CheckNetworkService {
+  MockCheckNetworkService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<bool> checkNetworkService() => (super.noSuchMethod(
+        Invocation.method(
+          #checkNetworkService,
+          [],
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+}
