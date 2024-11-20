@@ -49,11 +49,21 @@ make pub_get_all
 ```bash 
 flutter run
 ```
+### 4. To Run Test
+```bash
+cd modules/features 
+```
+then run 
+```bash
+flutter test 
+```
+
 ## State Management & Architecture
 The **Weather App** leverages:
 - **Bloc**: A predictable state management solution that simplifies handling application state.
 - **Clean Architecture**: The project is organized into `Data`, `Domain`, and `Presentation` layers for scalability and maintainability.
-- Modularization
+- **Modularization**: The app is divided into logical modules to improve scalability and maintainability.
+- **Dependency Injection**: Utilizes `flutter_modular` to manage dependencies and ensure loose coupling between components.
 - Dependency Injection
 - Unit Tests
 - Makefile
@@ -88,6 +98,7 @@ lib/
 ├── app_module/
 ├── app_widget/
 └── main.dart
+
 modules/
 ├── splash/
 ├── art_core/
