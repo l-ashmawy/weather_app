@@ -26,8 +26,17 @@ Ensure you have the following installed on your system:
 - [Dart SDK](https://dart.dev/get-dart)
 
 ## Installation
-### 1. Clone the repo
-### 2.
+### 1. Clone the repo by open terminal or command prompt.
+by https
+```bash
+git clone https://github.com/l-ashmawy/weather_app.git
+```
+Or by SSh
+```bash
+git@github.com:l-ashmawy/weather_app.git
+```
+
+### 2. Change your working directory to the cloned repository
 ```bash
 cd weather_app
 ```
