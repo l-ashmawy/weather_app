@@ -1,5 +1,5 @@
 import 'package:art_core/art_core.dart';
-import 'package:core/core.dart';
+import 'package:dependencies/dependencies.dart';
 
 void showSnackBar(String text, {bool isError = false}) {
   ScaffoldMessenger.of(

@@ -1,4 +1,6 @@
 import 'package:art_core/art_core.dart';
+import 'package:dependencies/dependencies.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class AppTextField extends StatefulWidget {
@@ -8,6 +10,8 @@ class AppTextField extends StatefulWidget {
   final String? hint;
   final TextStyle? hintStyle;
   final bool isSelectable;
+  final double? borderRadius;
+  final BorderRadius? borderRadiusObject;
 
   final bool darkOrAuth;
   final String? Function(String?)? validator;
@@ -22,7 +26,8 @@ class AppTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final TextEditingController? controller;
-
+  final FontWeight? fontWeight;
+  final double? textSize;
   final int? maxLength;
 
   final VoidCallback? onTap;
@@ -36,11 +41,20 @@ class AppTextField extends StatefulWidget {
   final Color? textColor;
   final bool? filled;
   final bool? enableBorder;
-  final bool isRequired;
+  final bool isRequired, visibal;
+  final FontWeight? hintFontWeight;
+
+  final double? hintFontSize;
+  final double? labelHeight;
+
+  final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
+  final Function(String)? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
-    Key? key,
+    super.key,
+    this.labelHeight,
     this.readOnly = false,
     this.maxLines = 1,
     this.onTap,
@@ -61,15 +75,25 @@ class AppTextField extends StatefulWidget {
     this.isSelectable = false,
     this.controller,
     this.maxLength,
-    this.contentPaddingVertical = 15,
+    this.contentPaddingVertical = 25,
     this.fillColor,
     this.filled,
     this.labelColor,
     this.enableBorder = true,
     this.textColor,
     this.isRequired = true,
+    this.visibal = true,
+    this.textInputAction = TextInputAction.next,
+    this.borderRadius,
+    this.fontWeight,
+    this.textSize,
+    this.focusNode,
+    this.onFieldSubmitted,
     this.inputFormatters,
-  }) : super(key: key);
+    this.hintFontSize,
+    this.hintFontWeight,
+    this.borderRadiusObject,
+  });
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -78,55 +102,20 @@ class AppTextField extends StatefulWidget {
 class _AppTextFieldState extends State<AppTextField> {
   bool obscureText = true;
 
-  // Define formatters for various input types
-  List<TextInputFormatter> _getInputFormatters() {
-    List<TextInputFormatter> formatters = [];
-
-    if (widget.textInputType == TextInputType.number ||
-        widget.textInputType == TextInputType.phone) {
-      // Allow only digits
-      formatters.add(FilteringTextInputFormatter.digitsOnly);
-    } else if (widget.textInputType == TextInputType.emailAddress) {
-      // Custom formatter to allow only valid email characters
-      formatters
-          .add(FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@._-]')));
-    } else if (widget.isPassword) {
-      // Allow special characters in password
-      formatters.add(FilteringTextInputFormatter.allow(
-          RegExp(r'[a-zA-Z0-9@#%^&*()_+\-=\[\]{};:"$|,.<>/?~`!\\]')));
-    }
-
-    if (widget.textInputType != TextInputType.emailAddress &&
-        !widget.isPassword) {
-      formatters.add(FilteringTextInputFormatter.deny(RegExp(
-          r'\b(SELECT|INSERT|UPDATE|DELETE|DROP|TRUNCATE|ALTER|EXEC|UNION|OR|AND)\b',
-          caseSensitive: false)));
-    }
-
-    // Prevent HTML characters (except in password field)
-    if (!widget.isPassword) {
-      formatters.add(FilteringTextInputFormatter.deny(RegExp(r'[<>\\/]')));
-    }
-
-    // Add custom formatters if provided
-    if (widget.inputFormatters != null) {
-      formatters.addAll(widget.inputFormatters!);
-    }
-
-    return formatters;
-  }
-
   @override
   Widget build(BuildContext context) {
+
     return TextFormField(
+      inputFormatters: widget.inputFormatters,
       controller: widget.controller,
       autofocus: false,
       onTap: widget.onTap ?? () {},
-      // inputFormatters: widget.inputFormatters,
-      inputFormatters: _getInputFormatters(),
       initialValue: widget.initialText,
       enabled: true,
       onEditingComplete: () {
+        FocusScope.of(context).unfocus();
+      },
+      onTapOutside: (event) {
         FocusScope.of(context).unfocus();
       },
       onChanged: widget.onChanged,
@@ -135,76 +124,98 @@ class _AppTextFieldState extends State<AppTextField> {
       keyboardType: widget.textInputType,
       obscureText: widget.isPassword == true ? obscureText : false,
       maxLength: widget.maxLength,
+      textAlign: TextAlign.start,
+      textAlignVertical: TextAlignVertical.center,
       style: TextStyle(
-        color: widget.textColor ?? AppColors.secondaryColor,
-        fontWeight: FontWeight.w500,
-        fontSize: 16,
-      ),
+          color: widget.textColor ?? Colors.grey,
+          fontWeight: widget.fontWeight ?? FontWeight.w500,
+          fontSize: widget.textSize ?? 16,
+          height: 1.6,
+          fontFamily: 'Montserrat'),
+      cursorColor: AppColors.primaryColor,
       decoration: InputDecoration(
-        fillColor: widget.fillColor,
-        filled: widget.filled,
+        filled: true,
+        fillColor: widget.fillColor ,
+        // filled: widget.filled,
         border: widget.enableBorder == false
             ? OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(16))
-            : Theme.of(context).inputDecorationTheme.border?.copyWith(
-                borderSide: BorderSide(
-                    color: widget.borderColor ?? AppColors.secondaryColor)),
+          borderSide: BorderSide.none,
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        )
+            : OutlineInputBorder(
+          borderSide: BorderSide(
+              color: widget.borderColor ??
+                  Colors.grey.withOpacity(0.6)),
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        ),
         disabledBorder: widget.enableBorder == false
             ? OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(16))
-            : Theme.of(context).inputDecorationTheme.disabledBorder?.copyWith(
-                borderSide: BorderSide(
-                    color: widget.borderColor ?? AppColors.secondaryColor)),
+          borderSide: BorderSide.none,
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        )
+            : OutlineInputBorder(
+          borderSide: BorderSide(
+              color: widget.borderColor ??
+                  Colors.grey.withOpacity(0.6)),
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        ),
         enabledBorder: widget.enableBorder == false
             ? OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(16))
-            : Theme.of(context).inputDecorationTheme.enabledBorder?.copyWith(
-                borderSide:
-                    BorderSide(color: widget.borderColor ?? Colors.grey)),
+          borderSide: BorderSide.none,
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        )
+            : OutlineInputBorder(
+          borderSide: BorderSide(
+              color: widget.borderColor ??
+                  Colors.grey.withOpacity(0.6)),
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        ),
         focusedBorder: widget.enableBorder == false
             ? OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(16))
-            : Theme.of(context).inputDecorationTheme.focusedBorder?.copyWith(
-                borderSide: BorderSide(
-                    color: widget.borderColor ?? AppColors.secondaryColor)),
+          borderSide: BorderSide(
+              color: widget.borderColor ?? AppColors.primaryColor),
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        )
+            : OutlineInputBorder(
+          borderSide: BorderSide(
+              color: widget.borderColor ?? AppColors.primaryColor),
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        ),
         focusedErrorBorder: widget.enableBorder == false
             ? OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(16))
+          borderSide: BorderSide.none,
+          borderRadius: widget.borderRadiusObject ??
+              BorderRadius.circular(widget.borderRadius ?? 4),
+        )
             : Theme.of(context).inputDecorationTheme.focusedErrorBorder,
-        errorBorder: widget.enableBorder == false
-            ? OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(16))
-            : Theme.of(context).inputDecorationTheme.errorBorder,
-        contentPadding: EdgeInsets.symmetric(
-            vertical: widget.contentPaddingVertical, horizontal: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         hintText: widget.hint,
-        hintStyle: TextStyle(
-          color: widget.hintColor ?? AppColors.secondaryColor,
-          fontWeight: FontWeight.w100,
-          fontSize: 14,
-        ),
-        labelText: widget.isRequired ? "${widget.label} *" : widget.label,
-        alignLabelWithHint: true,
-        labelStyle: TextStyle(
-          color: widget.labelColor ?? AppColors.secondaryColor,
-          fontWeight: FontWeight.w500,
-          fontSize: 16,
-        ),
+        hintStyle: widget.hintStyle ??
+            TextStyle(
+              color: widget.hintColor ?? Colors.grey,
+              fontWeight: widget.hintFontWeight ?? FontWeight.w400,
+              fontSize: widget.hintFontSize ?? 12,
+            ),
         errorText: widget.errorText == null ||
-                widget.errorText!.isEmpty ||
-                widget.errorText == ''
+            widget.errorText!.isEmpty ||
+            widget.errorText == ''
             ? null
             : widget.errorText,
         errorMaxLines: 3,
         prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
+
       ),
+      textInputAction: widget.textInputAction,
+      focusNode: widget.focusNode,
+      onFieldSubmitted: widget.onFieldSubmitted,
     );
   }
 }
