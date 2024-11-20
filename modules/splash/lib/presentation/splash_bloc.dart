@@ -5,7 +5,6 @@ part 'splash_event.dart';
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  final PreferenceManager preferenceManager = Modular.get<PreferenceManager>();
 
   SplashBloc() : super(SplashAnimationStarted()) {
     Future.delayed(const Duration(seconds: 2), () {
