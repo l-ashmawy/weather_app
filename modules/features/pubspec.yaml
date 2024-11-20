@@ -21,7 +21,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  mockito: ^5.0.15
-  mocktail: ^0.2.0
-  build_runner: ^2.4.5
+  mockito: ^5.4.4
+  mocktail: ^1.0.4
+  build_runner: ^2.4.13
 
